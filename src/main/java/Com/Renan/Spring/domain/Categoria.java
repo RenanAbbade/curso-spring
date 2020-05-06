@@ -1,11 +1,14 @@
 package Com.Renan.Spring.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Categoria implements Serializable { /**Implements Serializable para que os objs sejam convertidos para bytes para trafegar em redes e etc.
@@ -19,6 +22,9 @@ public class Categoria implements Serializable { /**Implements Serializable para
 	private Integer id;
 	
 	private String nome;
+
+	@ManyToMany(mappedBy = "categorias")//Esse relacionamento (n,n) já foi mapeado no List categorias
+	private List<Produto> produtos = new ArrayList<>();
 
 	public Categoria() {
 	
@@ -52,6 +58,17 @@ public class Categoria implements Serializable { /**Implements Serializable para
 	public  void setNome(String nome) {
 		this.nome = nome;
 	}
+	public void setProdutos(List<Produto> produtos) {
+		this.produtos = produtos;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
+
+
+	
 
 	@Override
 	public int hashCode() {
@@ -77,7 +94,12 @@ public class Categoria implements Serializable { /**Implements Serializable para
 			return false;
 		return true;
 	}
-	
+
+	public List<Produto> getProdutos() {
+		return produtos;
+	}
+
+
 	
 	
 	

@@ -9,10 +9,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import Com.Renan.Spring.domain.Categoria;
 import Com.Renan.Spring.domain.Cidade;
+import Com.Renan.Spring.domain.Cliente;
+import Com.Renan.Spring.domain.Endereco;
 import Com.Renan.Spring.domain.Estado;
 import Com.Renan.Spring.domain.Produto;
+import Com.Renan.Spring.domain.Enums.TipoCliente;
 import Com.Renan.Spring.repositories.CategoriaRepository;
 import Com.Renan.Spring.repositories.CidadeRepository;
+import Com.Renan.Spring.repositories.ClienteRepository;
+import Com.Renan.Spring.repositories.EnderecoRepository;
 import Com.Renan.Spring.repositories.EstadoRepository;
 import Com.Renan.Spring.repositories.ProdutoRepository;
 
@@ -30,6 +35,12 @@ public class CursoSpringApplication implements CommandLineRunner {
 
 	@Autowired
 	private CidadeRepository cidadeRepository;
+
+	@Autowired
+	private EnderecoRepository enderecoRepository;
+
+	@Autowired
+	private ClienteRepository clienteRepository;
 	
 
 	public static void main(String[] args) {
@@ -85,6 +96,19 @@ public class CursoSpringApplication implements CommandLineRunner {
 
 		cidadeRepository.saveAll(Arrays.asList(c1,c2));
 
+		Cliente cli1 = new Cliente(null, "Maria","maria@marie.com", "42322322", TipoCliente.PESSOAFISICA);
+		//Set dos telefones dos clientes
+		cli1.getTelefones().addAll(Arrays.asList("212121", "12212112"));
+
+		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 303", "Jardim","343232232",c1,cli1);
+
+		Endereco e2 = new Endereco(null, "Rua Salvador", "105", "Apto 02", "Sitio Angelica","332112121",c2,cli1);
+
+		cli1.getEnderecos().addAll(Arrays.asList(e1,e2));
+
+		clienteRepository.save(cli1);
+
+		enderecoRepository.saveAll(Arrays.asList(e1,e2));
 
 //Listas do Domain
 	

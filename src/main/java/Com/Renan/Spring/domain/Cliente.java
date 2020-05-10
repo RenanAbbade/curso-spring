@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import Com.Renan.Spring.domain.Enums.TipoCliente;
 
 @Entity
@@ -31,6 +33,7 @@ public class Cliente implements Serializable{
   private Integer tipo;//A classe cliente irá guardar somente o código referente a PJ ou PF, porém o enum TipoCliente, detem os valores, sendo necessário fazer com que busque no enum, e retorne o significado de cada cod.
 //Um cliente pode ter varios endereços, enquanto um endereço pertence a unicamente um cliente.
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "cliente")
   private List<Endereco> enderecos = new ArrayList<>();
 

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RestController
 public class IndexController {
 
-    @GetMapping(value="/")
+    @GetMapping(value="/*")
     public String getMethodName() {
         return "Index da aplicação";
     }

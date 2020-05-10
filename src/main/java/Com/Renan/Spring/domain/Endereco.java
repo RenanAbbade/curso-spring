@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Endereco implements Serializable {
 
@@ -23,10 +25,12 @@ public class Endereco implements Serializable {
   private String bairro;
   private String cep;
 
+  @JsonBackReference //Endereco não pode serializar cliente, a serialização de endereços já ocorre na classe cliente, dessa forma trato um possivel loop de referencias
   @ManyToOne
   @JoinColumn(name="cidade_id")
   private Cidade cidade;
 
+  @JsonBackReference //Relacionamento serializado na classe cliente, e inserida a referencia aqui para conter o loop de serializações json
   @ManyToOne
   @JoinColumn(name="cliente_id")
   private Cliente cliente;

@@ -8,7 +8,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+
+import org.hibernate.annotations.ManyToAny;
 
 @Entity
 public class Pedido implements Serializable{
@@ -25,18 +29,23 @@ public class Pedido implements Serializable{
 
     private Date instante;
     
-    private Cliente cliente; //Pedido tem relacionamento com cliente de 1 para 1
-    private Endereco enderecoDeEntrega;//Pedido tem relacionamento com endereco de 1 para 1, sendo uma associação direcionada, ou seja de Pedido para Endereco, logo pedido não precisa conhecer endereco, no caso pedido depende de endereço conforme https://www.devmedia.com.br/uml-unified-modeling-language-parte-02/9470
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente; 
+
+    @ManyToOne
+    @JoinColumn(name = "endereco_de_entrega_id")
+    private Endereco enderecoDeEntrega;
 
 
     public Pedido(){
 
     }
 
-    public Pedido(Integer id, Date instante, Pagamento pagamento, Cliente cliente, Endereco enderecoDeEntrega) {
+    public Pedido(Integer id, Date instante, Cliente cliente, Endereco enderecoDeEntrega) {
       this.id = id;
       this.instante = instante;
-      this.pagamento = pagamento;
+      //this.pagamento = pagamento;
       this.cliente = cliente;
       this.enderecoDeEntrega = enderecoDeEntrega;
     }

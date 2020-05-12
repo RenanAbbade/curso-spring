@@ -1,5 +1,6 @@
 package Com.Renan.Spring;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,20 @@ import Com.Renan.Spring.domain.Cidade;
 import Com.Renan.Spring.domain.Cliente;
 import Com.Renan.Spring.domain.Endereco;
 import Com.Renan.Spring.domain.Estado;
+import Com.Renan.Spring.domain.Pagamento;
+import Com.Renan.Spring.domain.PagamentoComBoleto;
+import Com.Renan.Spring.domain.PagamentoComCartao;
+import Com.Renan.Spring.domain.Pedido;
 import Com.Renan.Spring.domain.Produto;
+import Com.Renan.Spring.domain.Enums.EstadoPagamento;
 import Com.Renan.Spring.domain.Enums.TipoCliente;
 import Com.Renan.Spring.repositories.CategoriaRepository;
 import Com.Renan.Spring.repositories.CidadeRepository;
 import Com.Renan.Spring.repositories.ClienteRepository;
 import Com.Renan.Spring.repositories.EnderecoRepository;
 import Com.Renan.Spring.repositories.EstadoRepository;
+import Com.Renan.Spring.repositories.PagamentoRepository;
+import Com.Renan.Spring.repositories.PedidoRepository;
 import Com.Renan.Spring.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -41,6 +49,12 @@ public class CursoSpringApplication implements CommandLineRunner {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
+
+	@Autowired
+	private PedidoRepository pedidoRepository;
+
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
 	
 
 	public static void main(String[] args) {
@@ -96,7 +110,7 @@ public class CursoSpringApplication implements CommandLineRunner {
 
 		cidadeRepository.saveAll(Arrays.asList(c1,c2));
 
-		Cliente cli1 = new Cliente(null, "Maria","maria@marie.com", "42322322", TipoCliente.PESSOAFISICA);
+		Cliente cli1 = new Cliente(null, "Renan","renna@marie.com", "42322322", TipoCliente.PESSOAFISICA);
 		//Set dos telefones dos clientes
 		cli1.getTelefones().addAll(Arrays.asList("212121", "12212112"));
 
@@ -111,6 +125,25 @@ public class CursoSpringApplication implements CommandLineRunner {
 		enderecoRepository.saveAll(Arrays.asList(e1,e2));
 
 //Listas do Domain
+
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+		Pedido ped1 = new Pedido(null, sdf.parse("30/10/2017 10:32"), cli1, e1);
+
+		Pedido ped2 = new Pedido(null, sdf.parse("30/10/2015 10:32"), cli1, e2);
+
+		Pagamento pag = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pag);
+
+		Pagamento pag2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2017 00:00"), null);
+		ped2.setPagamento(pag2);
+
+		cli1.getPedidos().addAll(Arrays.asList(ped1,ped2));
+
+		pedidoRepository.saveAll(Arrays.asList(ped1,ped2));
+
+		pagamentoRepository.saveAll(Arrays.asList(pag, pag2));
 	
 
 	}

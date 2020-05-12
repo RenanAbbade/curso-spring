@@ -1,7 +1,10 @@
 package Com.Renan.Spring.domain;
 
+import javax.persistence.Entity;
+
 import Com.Renan.Spring.domain.Enums.EstadoPagamento;
 
+@Entity
 public class PagamentoComCartao extends Pagamento {
 
   private static final long serialVersionUID = 1L;

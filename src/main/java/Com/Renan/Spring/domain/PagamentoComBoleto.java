@@ -2,8 +2,11 @@ package Com.Renan.Spring.domain;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+
 import Com.Renan.Spring.domain.Enums.EstadoPagamento;
 
+@Entity
 public class PagamentoComBoleto extends Pagamento {
 
   private static final long serialVersionUID = 1L;

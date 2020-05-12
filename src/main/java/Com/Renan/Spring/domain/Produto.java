@@ -2,7 +2,9 @@ package Com.Renan.Spring.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,6 +39,8 @@ public class Produto implements Serializable{
     //InverseJoinColums como o proprio nome diz, é inversamente proporcional, especifica a FK da outra tabela, no caso categoria.
 
     private List<Categoria> categorias = new ArrayList<>();
+
+    private Set<ItemPedido> itens = new HashSet<>();
 
     public Produto(){
 

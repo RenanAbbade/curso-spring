@@ -16,9 +16,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import org.hibernate.annotations.ManyToAny;
 
 @Entity
 public class Pedido implements Serializable{
@@ -33,21 +30,21 @@ public class Pedido implements Serializable{
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm") //Formatação da Date via Json
     private Date instante;
 
-    @JsonManagedReference
+    //Pagamento Ref. mostrado no Json pedidos/{id}
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido")//Necessário o Cascade para não ocorrer o erro de entidade transiente quando salvamos o pedido e seu pagamento
     private Pagamento pagamento; //a associação de pedido para pagamento é 1 para 1
 
-    
-    
-    @JsonManagedReference
+    //Cliente Ref. mostrado no Json pedidos/{id}
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente; 
 
+    //Endereco Ref. mostrado no json pedidos/{id}
     @ManyToOne
     @JoinColumn(name = "endereco_de_entrega_id")
     private Endereco enderecoDeEntrega;
 
+    //ItensPedido ref mostrado no json pedidos/{id}
     @OneToMany(mappedBy = "id.pedido")
     private Set<ItemPedido> itens = new HashSet<>();
 

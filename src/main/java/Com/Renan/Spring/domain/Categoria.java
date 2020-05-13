@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Categoria implements Serializable { /**Implements Serializable para que os objs sejam convertidos para bytes para trafegar em redes e etc.
@@ -26,7 +25,7 @@ public class Categoria implements Serializable { /**Implements Serializable para
 	private String nome;
 
 
-	@JsonManagedReference //Anotação para remediar a referencia ciclica: que seria um loop causado pela serialização do Json, no qual o interpretador do Java analisa as referencias entre ambas as classes categoria e produto, e fica em loop ao serializar
+	 //Anotação para remediar a referencia ciclica: que seria um loop causado pela serialização do Json, no qual o interpretador do Java analisa as referencias entre ambas as classes categoria e produto, e fica em loop ao serializar
 	@ManyToMany(mappedBy = "categorias")//Esse relacionamento (n,n) já foi mapeado no List categorias
 	private List<Produto> produtos = new ArrayList<>();
 

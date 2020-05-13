@@ -9,8 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @Entity
 public class Cidade implements Serializable {
 
@@ -24,7 +22,6 @@ public class Cidade implements Serializable {
     private String nome;
 
 
-    @JsonManagedReference //Para conter a referencia ciclica, a classe Cidade serializara Estado
     @ManyToOne //Cada estado tem muitas cidades
     @JoinColumn(name = "estado_id")//relata a FK da classe atual
     private Estado estado;

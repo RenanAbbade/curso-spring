@@ -7,6 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 
+
 @Embeddable //Com essa annotation, dizemos que esta classe é um subtipo de outra
 public class ItemPedidoPK implements Serializable {
 

@@ -5,6 +5,9 @@ import java.io.Serializable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 @Entity
 public class ItemPedido  implements Serializable {
   
@@ -15,6 +18,7 @@ public class ItemPedido  implements Serializable {
   //Para descrever uma classe associativa no JPA, criamos uma chave composta com produto e pedido, para isso é criada uma classe auxiliar item pedido pK
   //Entao tipamos nosso Id como classe ItemPedidoPK
   
+  @JsonIgnore //Para não ser serializado
   @EmbeddedId //Para representar chave composta
   private ItemPedidoPK id = new ItemPedidoPK();
 
@@ -33,11 +37,13 @@ public class ItemPedido  implements Serializable {
     this.quantidade = quantidade;
     this.preco = preco;
   }
-
+//Tudo que começa com GET o spring entende que deve ser serializado, então para não ocasionar referencia ciclica utiliza-se o @jsonIgnore
+  @JsonIgnore
   public Pedido getPedido(){
     return id.getPedido();
   }
 
+  
   public Produto getProduto(){
     return id.getProduto();
   }

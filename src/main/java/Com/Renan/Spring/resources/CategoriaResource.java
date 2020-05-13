@@ -22,7 +22,7 @@ public class CategoriaResource {
 	private CategoriaService service;
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
-	public ResponseEntity<?> find(@PathVariable Integer id) {
+	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
 		Categoria obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 	}
@@ -34,9 +34,20 @@ public class CategoriaResource {
 		//Após a execução deste método, o obj será inserido no BD, o BD vai atribuir para este obj um novo ID, então pelas convenções do protocolo HTTP, devo fornecer como retorno a este método uma response com a URI do novo ID inserido
 		obj = service.insert(obj); 
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-		.path("/{id}").buildAndExpand(obj.getId()).toUri();//Padrão do java para fornecer agumento para a URI: O método fromCurrentRequest, pega o path atual, ou seja /categorias, e o path adiciona o caminho do id a URI atual com buildAndExpand, finalmente convertido para o tipo URI, com toUri().
+		.path("/{id}").buildAndExpand(obj.getId()).toUri();//Padrão do REST no Java para fornecer argumento para a URI: O método fromCurrentRequest, pega o path atual, ou seja /categorias, e o path adiciona o caminho do id a URI atual com buildAndExpand, finalmente convertido para o tipo URI, com toUri().
 
 		return ResponseEntity.created(uri).build();//O método created gera a resposta HTTP 201: CREATED, no corpo da response http.
 	
 	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<Void> update(@RequestBody Categoria obj, @PathVariable Integer id){
+		obj.setId(id);//Garantia do objeto, vai ser trocado por DTO no futuro.
+		obj = service.update(obj);
+		return ResponseEntity.noContent().build();
+
+	}
+
+
+
 }

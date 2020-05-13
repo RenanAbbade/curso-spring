@@ -26,5 +26,10 @@ public class CategoriaService {
 		return repo.save(obj);
 	}
 
+	public Categoria update(Categoria obj){
+		find(obj.getId());//O método find já busca se o Id existe no BD, caso não exist lança uma Exception
+		return repo.save(obj); //Método save serve tanto para inserir quanto atualizar
+	}
+
 
 }

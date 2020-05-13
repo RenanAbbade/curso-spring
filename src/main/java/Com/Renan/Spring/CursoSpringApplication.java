@@ -13,6 +13,7 @@ import Com.Renan.Spring.domain.Cidade;
 import Com.Renan.Spring.domain.Cliente;
 import Com.Renan.Spring.domain.Endereco;
 import Com.Renan.Spring.domain.Estado;
+import Com.Renan.Spring.domain.ItemPedido;
 import Com.Renan.Spring.domain.Pagamento;
 import Com.Renan.Spring.domain.PagamentoComBoleto;
 import Com.Renan.Spring.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import Com.Renan.Spring.repositories.CidadeRepository;
 import Com.Renan.Spring.repositories.ClienteRepository;
 import Com.Renan.Spring.repositories.EnderecoRepository;
 import Com.Renan.Spring.repositories.EstadoRepository;
+import Com.Renan.Spring.repositories.ItemPedidoRepository;
 import Com.Renan.Spring.repositories.PagamentoRepository;
 import Com.Renan.Spring.repositories.PedidoRepository;
 import Com.Renan.Spring.repositories.ProdutoRepository;
@@ -55,6 +57,9 @@ public class CursoSpringApplication implements CommandLineRunner {
 
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	
 
 	public static void main(String[] args) {
@@ -144,7 +149,20 @@ public class CursoSpringApplication implements CommandLineRunner {
 		pedidoRepository.saveAll(Arrays.asList(ped1,ped2));
 
 		pagamentoRepository.saveAll(Arrays.asList(pag, pag2));
-	
+
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 20.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.00);
+
+		ped1.getItens().addAll(Arrays.asList(ip1,ip2));
+
+		ped2.getItens().addAll(Arrays.asList(ip3));
+
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+
+		itemPedidoRepository.saveAll(Arrays.asList(ip1,ip2,ip3));
 
 	}
 

@@ -3,9 +3,11 @@ package Com.Renan.Spring.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import Com.Renan.Spring.domain.Categoria;
+import Com.Renan.Spring.exceptions.DataIntegrityException;
 import Com.Renan.Spring.exceptions.ObjectNotFoundException;
 import Com.Renan.Spring.repositories.CategoriaRepository;
 
@@ -30,6 +32,17 @@ public class CategoriaService {
 		find(obj.getId());//O método find já busca se o Id existe no BD, caso não exist lança uma Exception
 		return repo.save(obj); //Método save serve tanto para inserir quanto atualizar
 	}
+
+	public void delete(Integer id){
+		find(id);
+		try{
+			repo.deleteById(id);
+		}catch(DataIntegrityViolationException e){
+			throw new DataIntegrityException("Não é possível excluir uma categoria que possui produtos!");
+		}
+	}
+
+	
 
 
 }

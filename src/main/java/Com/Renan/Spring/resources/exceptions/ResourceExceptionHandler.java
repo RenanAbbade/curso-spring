@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 //Vai interceptar as exceptions
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import Com.Renan.Spring.exceptions.DataIntegrityException;
 import Com.Renan.Spring.exceptions.ObjectNotFoundException;
 import Com.Renan.Spring.exceptions.StandardError;
 
@@ -22,6 +23,16 @@ public class ResourceExceptionHandler{
     StandardError err = new StandardError(HttpStatus.NOT_FOUND.value(), e.getMessage(), System.currentTimeMillis());
 
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+    
+
+  }
+
+  @ExceptionHandler(DataIntegrityException.class)//Indica que é um tratador de Exceptions, e o .class o tipo 
+  public ResponseEntity<StandardError> DataIntegrity(DataIntegrityException e, HttpServletRequest request){
+    //Gera-se um BAD Request, pois foi uma tentativa de exclusão de uma entidade diretamente relacionada com outra
+    StandardError err = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(), System.currentTimeMillis());
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     
 
   }

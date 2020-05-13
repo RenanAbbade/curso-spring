@@ -48,6 +48,15 @@ public class CategoriaResource {
 
 	}
 
+	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+	public ResponseEntity<Categoria> delete(@PathVariable Integer id) {
+//Se ocorrer de o usuário deletar uma categoria que está relacionada a outra entidade, o Spring Data dá o erro DataIntegrityViolationException
+//Se faz necessário então executar a deleção por meio de um try/catch		
+		service.delete(id);
+
+		return ResponseEntity.noContent().build();
+	}
+
 
 
 }

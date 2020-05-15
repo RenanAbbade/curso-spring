@@ -1,6 +1,8 @@
 package Com.Renan.Spring.resources;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import Com.Renan.Spring.DTO.CategoriaDTO;
 import Com.Renan.Spring.domain.Categoria;
 import Com.Renan.Spring.services.CategoriaService;
 
@@ -20,6 +23,8 @@ public class CategoriaResource {
 	
 	@Autowired
 	private CategoriaService service;
+
+	
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
@@ -58,5 +63,16 @@ public class CategoriaResource {
 	}
 
 
+	//Mostrar todas as categorias sem uso acesso de id especifico
+	@RequestMapping(method=RequestMethod.GET)
+	public ResponseEntity<List<CategoriaDTO>> findAll() {
+		List<Categoria> listCategorias = service.findAll();
+		//Transformando as categorias em categoriasDTO para visualização desaclopada dos produtos, map efetua uma operação para cada elemento da lista chamando o constructor do DTO, após todo este mapeamento, a é chamada a API collectors que transforma em lista.
+		List<CategoriaDTO> listCategoriasDTO = listCategorias.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList());
+		return ResponseEntity.ok().body(listCategoriasDTO);
+	}
+
+
 
 }
+

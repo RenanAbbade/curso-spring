@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import Com.Renan.Spring.domain.Categoria;
@@ -45,6 +48,12 @@ public class CategoriaService {
 
 	public List<Categoria> findAll(){
 		return repo.findAll();
+	}
+//Método para paginação Passando o número da página, linhas por página, ordenação (nome, id), direction(Ascending, Descending)
+	public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction){
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage,Direction.valueOf(direction),orderBy);
+		return repo.findAll(pageRequest);//Automaticamente o findAll do JPA Hibernate, vai considerar o argumento como sobrecarga de métodos, e retorna a página.
+
 	}
 
 	

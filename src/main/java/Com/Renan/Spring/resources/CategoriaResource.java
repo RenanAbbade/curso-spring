@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -69,6 +71,25 @@ public class CategoriaResource {
 		List<Categoria> listCategorias = service.findAll();
 		//Transformando as categorias em categoriasDTO para visualização desaclopada dos produtos, map efetua uma operação para cada elemento da lista chamando o constructor do DTO, após todo este mapeamento, a é chamada a API collectors que transforma em lista.
 		List<CategoriaDTO> listCategoriasDTO = listCategorias.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList());
+		return ResponseEntity.ok().body(listCategoriasDTO);
+	}
+
+	//Paginação - o endpoint categorias/page para ativar o método de paginação
+	//Os atributos do método findPage necessitam das anotações nos parametros para capiturar os valores da request, sendo os parametros opcionais
+	//Esses parametros serão passados na queryString, ex: /categorias/page?page=0&linesPerPages=20...etc.
+	//@RequestParam -  utilizando o defaultValue como 0, se torna opcional o argumento, somente na troca de pagina sera usado.
+
+
+	@RequestMapping(value = "/page", method=RequestMethod.GET)
+
+	public ResponseEntity<Page<CategoriaDTO>> findPage(
+		@RequestParam(value="page", defaultValue = "0") Integer page, //Nome do parametro:page, valor padrão = 0
+		@RequestParam(value="linesPerPage", defaultValue = "24") Integer linesPerPage,//24 linhas por ser multiplo de 1,2,3,4 facilitando o layout responsivo
+		@RequestParam(value="orderBy", defaultValue = "nome") String orderBy, //defaultValue=nome, informa que se quer ordenar os dados pelo campo nome
+		@RequestParam(value="direction", defaultValue = "ASC") String direction) 
+		{
+		Page<Categoria> listCategorias = service.findPage(page,linesPerPage,orderBy,direction);//Passo os parametros para o método do service, que chamará o repositorio JPA
+		Page<CategoriaDTO> listCategoriasDTO = listCategorias.map(obj -> new CategoriaDTO(obj));//Como a classe Page já está em compliance com o Java 8, não necessita do stream ou do collect, o que simplifica a conversão
 		return ResponseEntity.ok().body(listCategoriasDTO);
 	}
 

@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +39,8 @@ public class CategoriaResource {
 	//https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Status - Código das respostas HTTP
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@RequestBody Categoria obj){//ResponseEntity<void> se refere a uma response no formato http vazia | @RequestBody:Para que o obj seja construido a partir dos dados JSON enviados, o JSON é convertido para um obj Java automaticamente
-		//Após a execução deste método, o obj será inserido no BD, o BD vai atribuir para este obj um novo ID, então pelas convenções do protocolo HTTP, devo fornecer como retorno a este método uma response com a URI do novo ID inserido
+	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO objDTO){//@Valid, annotation para validar o campo
+		Categoria obj = service.fromDTO(objDTO);
 		obj = service.insert(obj); 
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 		.path("/{id}").buildAndExpand(obj.getId()).toUri();//Padrão do REST no Java para fornecer argumento para a URI: O método fromCurrentRequest, pega o path atual, ou seja /categorias, e o path adiciona o caminho do id a URI atual com buildAndExpand, finalmente convertido para o tipo URI, com toUri().
@@ -48,11 +50,11 @@ public class CategoriaResource {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<Void> update(@RequestBody Categoria obj, @PathVariable Integer id){
-		obj.setId(id);//Garantia do objeto, vai ser trocado por DTO no futuro.
+	public ResponseEntity<Void> update(@Valid  @RequestBody CategoriaDTO objDTO, @PathVariable Integer id){
+		Categoria obj = service.fromDTO(objDTO);//Garantia do objeto, vai ser trocado por DTO no futuro.
+		obj.setId(id);
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
-
 	}
 
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)

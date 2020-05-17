@@ -55,7 +55,7 @@ public class Cliente implements Serializable{
     this.nome = nome;
     this.email = email;
     this.cpfOuCnpj = cpfOuCnpj;
-    this.tipo = tipo.getCod();
+    this.tipo = (tipo == null) ? null: tipo.getCod();//Cond ternaria caso o tipo seja nulo, como feito no fromDTO
   }
 
   public Integer getId() {

@@ -34,11 +34,16 @@ public class CategoriaService {
 	}
 
 	public Categoria update(Categoria obj){
-		find(obj.getId());//O método find já busca se o Id existe no BD, caso não exist lança uma Exception
-		return repo.save(obj); //Método save serve tanto para inserir quanto atualizar
+		Categoria newObj = find(obj.getId());
+		updateData(newObj, obj);
+		return repo.save(newObj); //Método save serve tanto para inserir quanto atualizar
 	}
 
-	public void delete(Integer id){
+	private void updateData(Categoria newObj, Categoria obj) {
+		newObj.setNome(obj.getNome());
+	}
+
+	public void delete(Integer id) {
 		find(id);
 		try{
 			repo.deleteById(id);

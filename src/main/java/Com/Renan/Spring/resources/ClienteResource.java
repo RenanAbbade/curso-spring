@@ -1,5 +1,6 @@
 package Com.Renan.Spring.resources;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import Com.Renan.Spring.DTO.ClienteDTO;
+import Com.Renan.Spring.DTO.ClienteNewDTO;
 import Com.Renan.Spring.domain.Cliente;
 import Com.Renan.Spring.services.ClienteService;
 
@@ -25,11 +28,24 @@ public class ClienteResource {
 	
 	@Autowired
 	private ClienteService service;
+
+
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public ResponseEntity<Cliente> find(@PathVariable Integer id) {
 		Cliente obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
+	}
+
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDTO){//@Valid, annotation para validar o campo
+		Cliente obj = service.fromNewDTO(objDTO);
+		obj = service.insert(obj); 
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+		.path("/{id}").buildAndExpand(obj.getId()).toUri();//Padrão do REST no Java para fornecer argumento para a URI: O método fromCurrentRequest, pega o path atual, ou seja /categorias, e o path adiciona o caminho do id a URI atual com buildAndExpand, finalmente convertido para o tipo URI, com toUri().
+
+		return ResponseEntity.created(uri).build();//O método created gera a resposta HTTP 201: CREATED, no corpo da response http.
+	
 	}
 
 

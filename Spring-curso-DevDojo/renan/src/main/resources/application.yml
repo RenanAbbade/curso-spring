@@ -1,0 +1,3 @@
+server:
+  error:
+    include-stacktrace: on_param #Ao aplicação retornar um statusException, não será exibido para o usuário o stackTrace.. Somente se ao testar, acrescentar "?trace=true

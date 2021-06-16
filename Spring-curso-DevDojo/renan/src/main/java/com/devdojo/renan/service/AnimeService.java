@@ -14,7 +14,7 @@ public class AnimeService {
     private static List<Anime> animes;
 
     static {
-       animes = new ArrayList<>(List.of(new Anime(1L, "Naruto"), new Anime(2L, "Berserk")));
+        animes = new ArrayList<>(List.of(new Anime(1L, "Naruto"), new Anime(2L, "Berserk")));
     }
 
     public List<Anime> listaAll() {
@@ -28,9 +28,14 @@ public class AnimeService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Anime  not found"));
     }//Se não for achado o id passado no path, retorna-se uma badRequest
 
-    public Anime save(Anime anime){
-        anime.setId(ThreadLocalRandom.current().nextLong(3,10000));
+    public Anime save(Anime anime) {
+        anime.setId(ThreadLocalRandom.current().nextLong(3, 10000));
         animes.add(anime);
         return anime;
     }
+
+    public void delete(long id) {
+        animes.remove(findById(id));
+    }
+
 }

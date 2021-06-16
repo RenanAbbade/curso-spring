@@ -1,20 +1,15 @@
 package com.devdojo.renan.domain;
 
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data //Já gera equals, hashCode, toString, getters and setters
 public class Anime {
 
+    private Long id;
     private String name;
-
-    public Anime(String name) {
-        this.name = name;
-    }
 
 }
 

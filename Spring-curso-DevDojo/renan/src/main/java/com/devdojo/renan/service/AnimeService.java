@@ -3,6 +3,7 @@ package com.devdojo.renan.service;
 import com.devdojo.renan.domain.Anime;
 import com.devdojo.renan.dto.AnimePostDTO;
 import com.devdojo.renan.dto.AnimePutDTO;
+import com.devdojo.renan.exception.BadRequestException;
 import com.devdojo.renan.repository.AnimeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class AnimeService {
 
     public Anime findById(long id) {
         return animeRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Anime  not found"));
+                .orElseThrow(() -> new BadRequestException("Anime  not found"));
 
     }//Se não for achado o id passado no path, retorna-se uma badRequest
 

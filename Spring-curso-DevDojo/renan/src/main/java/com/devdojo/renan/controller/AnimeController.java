@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class AnimeController {
     }
 
     @PostMapping
-    public ResponseEntity<Anime> save(@RequestBody AnimePostDTO animePostDTO){
+    public ResponseEntity<Anime> save(@RequestBody @Valid AnimePostDTO animePostDTO){ //Inserindo o @Valid, indicando ao Spring que este objeto contem validações em seus campos
         return new ResponseEntity(animeService.save(animePostDTO), HttpStatus.CREATED);
     }
 

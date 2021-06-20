@@ -2,6 +2,8 @@ package com.devdojo.renan.controller;
 
 
 import com.devdojo.renan.domain.Anime;
+import com.devdojo.renan.dto.AnimePostDTO;
+import com.devdojo.renan.dto.AnimePutDTO;
 import com.devdojo.renan.service.AnimeService;
 import com.devdojo.renan.util.DateUtil;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +38,8 @@ public class AnimeController {
     }
 
     @PostMapping
-    public ResponseEntity<Anime> save(@RequestBody Anime anime){
-        return new ResponseEntity(animeService.save(anime), HttpStatus.CREATED);
+    public ResponseEntity<Anime> save(@RequestBody AnimePostDTO animePostDTO){
+        return new ResponseEntity(animeService.save(animePostDTO), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/{id}")
@@ -47,8 +49,8 @@ public class AnimeController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> replace(@RequestBody Anime anime){
-        animeService.replace(anime);
+    public ResponseEntity<Void> replace(@RequestBody AnimePutDTO animePutDTO){
+        animeService.replace(animePutDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

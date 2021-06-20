@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -32,9 +33,12 @@ public class AnimeService {
 
     }//Se não for achado o id passado no path, retorna-se uma badRequest
 
+    // @Transactional: Com essa annotation eu tenho rollback automatico em uma transação envolvendo o BD.
+    // De modo que se alterar o BD e após isso a aplicação retornar uma exception antes do método ser retornado,
+    // as alterações em BD não serão commitadas. Com rollbackFor ele leva as Exceptions em runtime em consideração
+    @Transactional
     public Anime save(AnimePostDTO anime) {
         return animeRepository.save(Anime.builder().name(anime.getName()).build());
-
     }
 
     public void delete(long id) {

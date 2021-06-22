@@ -8,6 +8,8 @@ import com.devdojo.renan.service.AnimeService;
 import com.devdojo.renan.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,10 +30,10 @@ public class AnimeController {
     private final AnimeService animeService;
 
     @GetMapping
-    public ResponseEntity<List<Anime>> list(){
+    public ResponseEntity<Page<Anime>> list(Pageable pageable){
         log.info(dateUtil.formatLocalDateTimeToDataBaseStyle(LocalDateTime.now()));
-        return ResponseEntity.ok(animeService.listaAll());
-    }
+        return ResponseEntity.ok(animeService.listAll(pageable));
+    }//http://localhost:8080/api/v1/animes?size=5
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<Anime> findByUId(@PathVariable long id){

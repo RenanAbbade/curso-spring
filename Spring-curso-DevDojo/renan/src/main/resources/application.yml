@@ -10,3 +10,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+#Para não impactar na performance, o show-sql só será habilitado no ambiente de debug:
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG

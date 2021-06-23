@@ -43,5 +43,13 @@ public class SpringClient {
         ResponseEntity<Anime> animeResponse = new RestTemplate().exchange("http://localhost:8080/api/v1/animes/", HttpMethod.POST, new HttpEntity<>(anime, httpHeaders), Anime.class); //URL, Objeto request, objeto Response.class
 
         log.info(animeResponse);
+        //PUT UPDATE
+        animeResponse.getBody(); //Anime created in POST Method
+        ResponseEntity<Void> animeUpd = new RestTemplate().exchange("http://localhost:8080/api/v1/animes/", HttpMethod.PUT, new HttpEntity<>(animeResponse.getBody(), httpHeaders), Void.class);
+        log.info(animeUpd);
+
+        //DELETE
+        ResponseEntity<Void> animeDel = new RestTemplate().exchange("http://localhost:8080/api/v1/animes/{id}", HttpMethod.DELETE, new HttpEntity<>(animeResponse.getBody(), httpHeaders), Void.class, 1);//excluindo o anime com id 1
+        log.info(animeDel);
     }
 }

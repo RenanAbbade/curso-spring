@@ -41,6 +41,9 @@ class AnimeControllerTest {
         //  não importando o argumento passado,então retorne o PageImpl<Anime>  animePage
         BDDMockito.when(animeServiceMock.listAll(ArgumentMatchers.any()))
                 .thenReturn(animePage);
+
+        BDDMockito.when(animeServiceMock.ListAllNonPageble())
+                .thenReturn(List.of(AnimeCreator.createdValidAnime()));
     }
 
     @Test
@@ -52,6 +55,20 @@ class AnimeControllerTest {
         Assertions.assertThat(animePage).isNotNull();
         Assertions.assertThat(animePage.toList()).isNotEmpty().hasSize(1);
         Assertions.assertThat(animePage.toList().get(0).getName()).isEqualTo(expectedName);
+
+    }
+
+    @Test
+    @DisplayName("returns list of anime  when successful")
+    void listAll_returnsListOfAnimes_WhenSuccessful(){
+        String expectedName = AnimeCreator.createdValidAnime().getName();
+        List<Anime> animes = animeController.listAll().getBody();
+
+        Assertions.assertThat(animes).isNotNull();
+        Assertions.assertThat(animes).isNotEmpty();
+        Assertions.assertThat(animes).hasSize(1);
+
+        Assertions.assertThat(animes.get(0).getName()).isEqualTo(expectedName);
 
     }
 

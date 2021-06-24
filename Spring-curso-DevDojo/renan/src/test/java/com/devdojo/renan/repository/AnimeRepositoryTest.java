@@ -1,6 +1,7 @@
 package com.devdojo.renan.repository;
 
 import com.devdojo.renan.domain.Anime;
+import com.devdojo.renan.util.AnimeCreator;
 import lombok.extern.log4j.Log4j2;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +25,7 @@ class AnimeRepositoryTest {
     @Test
     @DisplayName("Saves persist anime when successful")
     void save_PersistAnime_WhenSuccessful(){//Pattern de nomeação do metódo de testes: nomeMetodo_OqueDeveFazer_ResultadoEsperado
-        Anime animeToBeSaved = createdAnime();
+        Anime animeToBeSaved = AnimeCreator.createAnimeToBeSaved();
         Anime animeSaved = this.animeRepository.save(animeToBeSaved);
 
         Assertions.assertThat(animeSaved).isNotNull(); //org.assertj
@@ -35,7 +36,7 @@ class AnimeRepositoryTest {
     @Test
     @DisplayName("Saves update`s anime when successful")
     void save_UpdateAnime_WhenSuccessful(){//Pattern de nomeação do metódo de testes: nomeMetodo_OqueDeveFazer_ResultadoEsperado
-        Anime animeToBeSaved = createdAnime();
+        Anime animeToBeSaved = AnimeCreator.createAnimeToBeSaved();
         Anime animeSaved = this.animeRepository.save(animeToBeSaved);
 
         //update flux
@@ -50,7 +51,7 @@ class AnimeRepositoryTest {
     @Test
     @DisplayName("Delete removes anime when successful")
     void delete_RemovesAnime_WhenSuccessful(){//Pattern de nomeação do metódo de testes: nomeMetodo_OqueDeveFazer_ResultadoEsperado
-        Anime animeToBeSaved = createdAnime();
+        Anime animeToBeSaved = AnimeCreator.createAnimeToBeSaved();
         Anime animeSaved = this.animeRepository.save(animeToBeSaved);
 
        //delete flux
@@ -66,14 +67,13 @@ class AnimeRepositoryTest {
     @Test
     @DisplayName("Find by name, returns a List of anime when successful")
     void findByName_ReturnsListAnime_WhenSuccessful(){//Pattern de nomeação do metódo de testes: nomeMetodo_OqueDeveFazer_ResultadoEsperado
-        Anime animeToBeSaved = createdAnime();
+        Anime animeToBeSaved = AnimeCreator.createAnimeToBeSaved();
         Anime animeSaved = this.animeRepository.save(animeToBeSaved);
 
         List<Anime> animes = this.animeRepository.findByName(animeSaved.getName());
 
         Assertions.assertThat(animes).isNotEmpty();
         Assertions.assertThat(animes).contains(animeSaved);
-
 
     }
 
@@ -97,11 +97,8 @@ class AnimeRepositoryTest {
         Assertions.assertThatExceptionOfType(ConstraintViolationException.class)
                 .isThrownBy(() -> this.animeRepository.save(anime))
                 .withMessageContaining("The Anime cannot be empty");
-
     }
 
-    private Anime createdAnime(){
-        return Anime.builder().name("Naruto Shippuden").build();
-    }
+
 
 }

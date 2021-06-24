@@ -25,19 +25,15 @@ import java.util.List;
 @RequiredArgsConstructor //Cria constructor com os campos final,  injecao de dependencia, n precisando de autowired
 public class AnimeController {
 
-    private final DateUtil dateUtil;
-
     private final AnimeService animeService;
 
     @GetMapping
     public ResponseEntity<Page<Anime>> list(Pageable pageable){
-        log.info(dateUtil.formatLocalDateTimeToDataBaseStyle(LocalDateTime.now()));
         return ResponseEntity.ok(animeService.listAll(pageable));
     }//http://localhost:8080/api/v1/animes?size=5
 
     @GetMapping("/all")
     public ResponseEntity<List<Anime>> listAll(){
-        log.info(dateUtil.formatLocalDateTimeToDataBaseStyle(LocalDateTime.now()));
         return ResponseEntity.ok(animeService.ListAllNonPageble());
     }
 

@@ -38,12 +38,12 @@ public class AnimeController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Anime> findByUId(@PathVariable long id){
+    public ResponseEntity<Anime> findById(@PathVariable long id){
         return ResponseEntity.ok(animeService.findById(id));
     }
 
     @GetMapping(path = "/findByName") //findByName?name=Naruto
-    public ResponseEntity<List<Anime>> findByUId(@RequestParam String name){
+    public ResponseEntity<List<Anime>> findByName(@RequestParam String name){
         return ResponseEntity.ok(animeService.findByName(name));
     }
 

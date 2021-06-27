@@ -1,9 +1,8 @@
-package com.devdojo.renan.controller;
+package com.devdojo.renan.service;
 
 import com.devdojo.renan.domain.Anime;
-import com.devdojo.renan.dto.AnimePostDTO;
-import com.devdojo.renan.dto.AnimePutDTO;
-import com.devdojo.renan.service.AnimeService;
+import com.devdojo.renan.exception.BadRequestException;
+import com.devdojo.renan.repository.AnimeRepository;
 import com.devdojo.renan.util.AnimeCreator;
 import com.devdojo.renan.util.AnimePostDTOCreator;
 import com.devdojo.renan.util.AnimePutDTOCreator;
@@ -18,24 +17,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
+import java.util.Optional;
 
-//Para testes no Spring, pode-se utilizar o @SpringBootTest,
-// como maleficio, este tenta inicializar
-// todo o contexto de aplicação do Spring
-// Sendo assim, não funcionária com um BD in memory por exemplo.
-//Utilizing o @ExtendWith(SpringExtension.class) não é necessário utilizar o context 100 %
 @ExtendWith(SpringExtension.class)
-class AnimeControllerTest {
+class AnimeServiceTest {
     @InjectMocks //Se utiliza quando se quer testar a classe em sí
-    private AnimeController animeController;
+    private AnimeService animeService;
     @Mock //Utiliza para todas as classes que estão sendo utilizadas dentro da classe (AnimeController)
     //Define o comportamento(mock) das classes do injetadas
-    private AnimeService animeServiceMock;
+    private AnimeRepository animeRepositoryMock;
 
     @BeforeEach
         //Executa antes de cada teste
@@ -44,32 +39,30 @@ class AnimeControllerTest {
         PageImpl<Anime> animePage = new PageImpl<>(List.of(AnimeCreator.createdValidAnime()));
         //Explicação linha BDDMockito: Quando for executado o método listAll da classe de service,
         //  não importando o argumento passado,então retorne o PageImpl<Anime>  animePage
-        BDDMockito.when(animeServiceMock.listAll(ArgumentMatchers.any()))
+        BDDMockito.when(animeRepositoryMock.findAll(ArgumentMatchers.any(PageRequest.class)))
                 .thenReturn(animePage);
 
-        BDDMockito.when(animeServiceMock.ListAllNonPageble())
+        BDDMockito.when(animeRepositoryMock.findAll())
                 .thenReturn(List.of(AnimeCreator.createdValidAnime()));
 
-        BDDMockito.when(animeServiceMock.findByIdOrElseThrow(ArgumentMatchers.anyLong()))
-                .thenReturn(AnimeCreator.createdValidAnime());
+        BDDMockito.when(animeRepositoryMock.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(AnimeCreator.createdValidAnime()));
 
-        BDDMockito.when(animeServiceMock.findByName(ArgumentMatchers.anyString()))
+        BDDMockito.when(animeRepositoryMock.findByName(ArgumentMatchers.anyString()))
                 .thenReturn(List.of(AnimeCreator.createdValidAnime()));
 
-        BDDMockito.when(animeServiceMock.save(ArgumentMatchers.any(AnimePostDTO.class)))
+        BDDMockito.when(animeRepositoryMock.save(ArgumentMatchers.any(Anime.class)))
                 .thenReturn(AnimeCreator.createdValidAnime());
 
-        //Como replace retorna void, os métodos a serem chamados devem inclinar para não esperar um retorno
-        BDDMockito.doNothing().when(animeServiceMock).replace(ArgumentMatchers.any(AnimePutDTO.class));
-        BDDMockito.doNothing().when(animeServiceMock).delete(ArgumentMatchers.anyLong());
+        BDDMockito.doNothing().when(animeRepositoryMock).delete(ArgumentMatchers.any(Anime.class));
 
     }
 
     @Test
-    @DisplayName("List returns list of anime inside page object when successful")
-    void list_returnsListOfAnimesInsidePageObject_WhenSuccessful() {
+    @DisplayName("ListAll returns list of anime inside page object when successful")
+    void listAll_returnsListOfAnimesInsidePageObject_WhenSuccessful() {
         String expectedName = AnimeCreator.createdValidAnime().getName();
-        Page<Anime> animePage = animeController.list(null).getBody();
+        Page<Anime> animePage = animeService.listAll(PageRequest.of(1, 1));
 
         Assertions.assertThat(animePage).isNotNull();
         Assertions.assertThat(animePage.toList()).isNotEmpty().hasSize(1);
@@ -78,10 +71,10 @@ class AnimeControllerTest {
     }
 
     @Test
-    @DisplayName("returns list of anime  when successful")
-    void listAll_returnsListOfAnimes_WhenSuccessful() {
+    @DisplayName("listAllNonPageable returns list of anime  when successful")
+    void listAllNonPageable_returnsListOfAnimes_WhenSuccessful() {
         String expectedName = AnimeCreator.createdValidAnime().getName();
-        List<Anime> animes = animeController.listAll().getBody();
+        List<Anime> animes = animeService.ListAllNonPageble();
 
         Assertions.assertThat(animes).isNotNull();
         Assertions.assertThat(animes).isNotEmpty();
@@ -92,10 +85,10 @@ class AnimeControllerTest {
     }
 
     @Test
-    @DisplayName("FindById returns a anime when successful")
-    void findById_returnsAnime_WhenSuccessful() {
+    @DisplayName("findByIdOrElseThrow returns a anime when successful")
+    void findByIdOrElseThrow_returnsAnime_WhenSuccessful() {
         Long expectedId = AnimeCreator.createdValidAnime().getId();
-        Anime anime = animeController.findById(1).getBody();
+        Anime anime = animeService.findByIdOrElseThrow(1);
 
         Assertions.assertThat(anime).isNotNull();
 
@@ -104,10 +97,21 @@ class AnimeControllerTest {
     }
 
     @Test
+    @DisplayName("findByIdOrElseThrow throws a BAD REQUEST EXCEPTION when anime is not found")
+    void findByIdOrElseThrow_ThrowsBadRequestException_WhenAnimeNotFound() {
+        BDDMockito.when(animeRepositoryMock.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
+
+        Assertions.assertThatExceptionOfType(BadRequestException.class)
+                .isThrownBy(() -> animeService.findByIdOrElseThrow(1));
+    }
+
+
+    @Test
     @DisplayName("FindByName returns list of anime when successful")
     void FindByName_returnsAnimeList_WhenSuccessful() {
         String expectedName = AnimeCreator.createdValidAnime().getName();
-        List<Anime> animes = animeController.findByName("anime").getBody();
+        List<Anime> animes = animeService.findByName("anime");
 
         Assertions.assertThat(animes).isNotNull();
         Assertions.assertThat(animes).isNotEmpty();
@@ -120,7 +124,7 @@ class AnimeControllerTest {
     @Test
     @DisplayName("save returns a anime when successful")
     void save_returnsAnime_WhenSuccessful() {
-        Anime anime = animeController.save(AnimePostDTOCreator.createAnimePostRequestBody()).getBody();
+        Anime anime = animeService.save(AnimePostDTOCreator.createAnimePostRequestBody());
         Assertions.assertThat(anime).isNotNull().isEqualTo(AnimeCreator.createdValidAnime());
     }
 
@@ -128,24 +132,13 @@ class AnimeControllerTest {
     @DisplayName("replace updates a anime when successful")
     void replace_updatesAnime_WhenSuccessful() {
         //replace (update) não retorna um objeto válido, portanto valida-se se não gerou exception e o status code
-        Assertions.assertThatCode(() -> animeController.replace(AnimePutDTOCreator.createAnimePutRequestBody())).doesNotThrowAnyException();
-        ResponseEntity<Void> entity = animeController.replace(AnimePutDTOCreator.createAnimePutRequestBody());
-
-        Assertions.assertThat(entity).isNotNull();
-
-        Assertions.assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        Assertions.assertThatCode(() -> animeService.replace(AnimePutDTOCreator.createAnimePutRequestBody())).doesNotThrowAnyException();
     }
 
     @Test
     @DisplayName("Delete removes anime when successful")
     void delete_Anime_WhenSuccessful() {
-        //replace (update) não retorna um objeto válido, portanto valida-se se não gerou exception e o status code
-        Assertions.assertThatCode(() -> animeController.delete(1)).doesNotThrowAnyException();
-        ResponseEntity<Void> entity = animeController.delete(1);
-
-        Assertions.assertThat(entity).isNotNull();
-
-        Assertions.assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        Assertions.assertThatCode(() -> animeService.delete(1)).doesNotThrowAnyException();
     }
 
 }

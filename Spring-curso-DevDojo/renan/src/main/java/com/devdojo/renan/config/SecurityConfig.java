@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 //Configuração que irá ser automaticamente carregada pelos filtros com a annotation abaixo
 @EnableWebSecurity
@@ -20,7 +21,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         //Quando se receber uma requisição http, digo que todas elas deverão passar pela autorização
         //Todas as requests que baterem no controller deverão passar por esta autenticação básica
-        http.authorizeRequests()
+        //CSRF Token: Utilizado para impedir que outro usuário execute ações em nome do user anteriormente logado
+        //Medida de segurança utilizada de modo a invalidar tentativas de passagem de identidade.
+        http.csrf().disable()
+                //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) // O withHttpOnlyFalse é para prover o cookie a aplicação frontend
+                //.and()
+                .authorizeRequests()
                 .anyRequest()
                 .authenticated()
                 .and()

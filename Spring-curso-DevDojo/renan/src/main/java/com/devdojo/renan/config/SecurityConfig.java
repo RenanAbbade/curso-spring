@@ -17,6 +17,15 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 @EnableGlobalMethodSecurity(prePostEnabled = true)//Quando incluida esta annotation, é gerado um password automatico, também habilitando os recursos de Spring Security por método
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+
+    /***
+     * Filtros Spring
+     * BasicAuthenticationFilter
+     * DefaultLoginPageGeneratingFilter
+     * DefaultLoginPageGeneratingFilter
+     *
+     */
+
     //Neste método será configurado o que queremos proteger com o protocolo http
     //
     @Override
@@ -33,6 +42,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated()
+                .and()
+                .formLogin()
                 .and()
                 .httpBasic();
     }

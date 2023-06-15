@@ -52,6 +52,21 @@ void testIsTuesdayOrThursday(DayOfWeek day) {
 Nesse caso, o método de teste testIsTuesdayOrThursday será executado apenas para as constantes da enumeração DayOfWeek que começam com o prefixo "T".
 
 A @EnumSource é uma ferramenta útil para testar lógica que depende de constantes enumeradas, permitindo que você verifique comportamentos específicos para cada valor da enumeração de forma simples e organizada.
+A linha de código que você forneceu é um exemplo de uso da annotation @EnumSource no contexto de um teste parametrizado. Vamos analisar cada parte dela:
+
+java
+Copy code
+@EnumSource(value = ContractStatus.class, names = {"OPERATIONAL","SURVEILLANCE"})
+@EnumSource: É a annotation utilizada para indicar que o teste será parametrizado com base em uma enumeração.
+
+value = ContractStatus.class: Especifica a classe da enumeração a ser utilizada como fonte de dados para o teste parametrizado. No exemplo, a classe da enumeração é ContractStatus.
+
+names = {"OPERATIONAL", "SURVEILLANCE"}: Especifica os nomes das constantes da enumeração que serão utilizadas como parâmetros para o teste. No exemplo, apenas as constantes "OPERATIONAL" e "SURVEILLANCE" serão usadas.
+
+Com essa configuração, o teste parametrizado será executado duas vezes, uma para cada constante especificada na enumeração ContractStatus com os nomes "OPERATIONAL" e "SURVEILLANCE". Cada execução do teste terá a constante correspondente passada como argumento para o método de teste.
+
+Essa abordagem permite verificar diferentes comportamentos ou cenários de teste com base nas constantes da enumeração, facilitando a cobertura de casos específicos e a análise de resultados diferentes para cada valor da enumeração.
+
 
 @Nested
 A annotation @Nested é uma anotação fornecida pelo framework de testes JUnit 5, que permite criar classes de teste aninhadas (nested) para organizar e estruturar melhor os testes.

@@ -1,0 +1,54 @@
+@ParameterizedTest
+A annotation @ParameterizedTest é uma anotação fornecida pelo framework de testes JUnit 5, que permite criar testes parametrizados. Com essa anotação, é possível executar um mesmo teste várias vezes, com diferentes conjuntos de dados de entrada.
+
+Ao utilizar a @ParameterizedTest, você precisa fornecer uma fonte de dados que forneça os parâmetros para os testes. Essa fonte de dados pode ser uma classe estática interna que implementa a interface ArgumentsProvider ou uma expressão lambda que retorna uma lista de argumentos. Cada conjunto de argumentos é passado para o método de teste como parâmetros.
+
+Aqui está um exemplo de uso da @ParameterizedTest:
+
+java
+Copy code
+@ParameterizedTest
+@ValueSource(ints = {1, 2, 3})
+void testIsPositive(int number) {
+    assertTrue(number > 0);
+}
+Nesse exemplo, o método de teste testIsPositive é executado três vezes, uma para cada valor inteiro fornecido pela @ValueSource. O método de teste verifica se cada número é positivo usando a asserção assertTrue.
+
+Além da @ValueSource, o JUnit 5 fornece outras anotações de origem de dados, como @EnumSource, @CsvSource e @MethodSource, que permitem diferentes formas de fornecer os argumentos para os testes parametrizados.
+
+O uso da @ParameterizedTest é útil quando você precisa testar um código com diferentes cenários ou entradas, permitindo uma cobertura mais abrangente dos casos de teste com um único método de teste.
+
+É importante mencionar que a @ParameterizedTest é específica para o JUnit 5 e não está disponível nas versões anteriores do JUnit.
+
+ annotation @EnumSource é uma anotação fornecida pelo framework de testes JUnit 5, que permite criar testes parametrizados com base em enumerações. Com essa anotação, é possível executar um mesmo teste várias vezes, passando diferentes constantes da enumeração como parâmetros.
+
+@EnumSource
+Ao utilizar a @EnumSource, você precisa fornecer a classe da enumeração que será utilizada como fonte de dados. O JUnit 5 então invocará o método de teste para cada constante da enumeração fornecida.
+
+Aqui está um exemplo de uso da @EnumSource:
+
+java
+Copy code
+enum DayOfWeek {
+    MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+}
+
+@Test
+@EnumSource(DayOfWeek.class)
+void testIsWeekday(DayOfWeek day) {
+    assertTrue(day != DayOfWeek.SATURDAY && day != DayOfWeek.SUNDAY);
+}
+Nesse exemplo, o método de teste testIsWeekday é executado sete vezes, uma para cada constante da enumeração DayOfWeek. O método de teste verifica se cada dia da semana é um dia útil (não é sábado nem domingo) usando a asserção assertTrue.
+
+A @EnumSource também oferece opções de filtragem para incluir ou excluir certas constantes da enumeração com base em critérios específicos. Por exemplo, você pode usar a opção mode para filtrar apenas constantes que iniciam com um determinado prefixo:
+
+java
+Copy code
+@Test
+@EnumSource(value = DayOfWeek.class, mode = EnumSource.Mode.MATCH_ALL, names = "^T.*")
+void testIsTuesdayOrThursday(DayOfWeek day) {
+    assertTrue(day == DayOfWeek.TUESDAY || day == DayOfWeek.THURSDAY);
+}
+Nesse caso, o método de teste testIsTuesdayOrThursday será executado apenas para as constantes da enumeração DayOfWeek que começam com o prefixo "T".
+
+A @EnumSource é uma ferramenta útil para testar lógica que depende de constantes enumeradas, permitindo que você verifique comportamentos específicos para cada valor da enumeração de forma simples e organizada.

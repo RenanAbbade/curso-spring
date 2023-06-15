@@ -52,3 +52,54 @@ void testIsTuesdayOrThursday(DayOfWeek day) {
 Nesse caso, o método de teste testIsTuesdayOrThursday será executado apenas para as constantes da enumeração DayOfWeek que começam com o prefixo "T".
 
 A @EnumSource é uma ferramenta útil para testar lógica que depende de constantes enumeradas, permitindo que você verifique comportamentos específicos para cada valor da enumeração de forma simples e organizada.
+
+@Nested
+A annotation @Nested é uma anotação fornecida pelo framework de testes JUnit 5, que permite criar classes de teste aninhadas (nested) para organizar e estruturar melhor os testes.
+
+Ao utilizar a @Nested, você pode criar classes de teste internas em uma classe de teste externa, permitindo agrupar testes relacionados e fornecer um contexto mais claro para cada grupo de testes.
+
+Aqui está um exemplo de uso da @Nested:
+
+java
+Copy code
+public class CalculatorTest {
+    
+    @Nested
+    class AdditionTests {
+        
+        @Test
+        void testAddition() {
+            Calculator calculator = new Calculator();
+            assertEquals(5, calculator.add(2, 3));
+        }
+        
+        @Test
+        void testAdditionWithZero() {
+            Calculator calculator = new Calculator();
+            assertEquals(2, calculator.add(2, 0));
+        }
+    }
+    
+    @Nested
+    class SubtractionTests {
+        
+        @Test
+        void testSubtraction() {
+            Calculator calculator = new Calculator();
+            assertEquals(4, calculator.subtract(7, 3));
+        }
+        
+        @Test
+        void testSubtractionWithZero() {
+            Calculator calculator = new Calculator();
+            assertEquals(5, calculator.subtract(5, 0));
+        }
+    }
+}
+Nesse exemplo, a classe de teste externa CalculatorTest possui duas classes de teste aninhadas (AdditionTests e SubtractionTests). Cada classe de teste aninhada contém métodos de teste relacionados a operações específicas da calculadora.
+
+Ao executar esses testes, o JUnit tratará cada classe de teste aninhada como uma entidade separada, exibindo os resultados dos testes agrupados de acordo com a estrutura aninhada.
+
+A utilização da @Nested permite uma organização mais clara e semântica dos testes, separando-os em grupos lógicos e fornecendo um contexto mais descritivo para cada grupo de testes. Isso facilita a leitura, manutenção e compreensão do código de teste.
+
+Além disso, as classes de teste aninhadas também têm acesso aos campos e métodos da classe de teste externa, permitindo o compartilhamento de recursos e configurações entre os testes relacionados dentro do mesmo contexto.

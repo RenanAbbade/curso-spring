@@ -118,3 +118,13 @@ Ao executar esses testes, o JUnit tratará cada classe de teste aninhada como um
 A utilização da @Nested permite uma organização mais clara e semântica dos testes, separando-os em grupos lógicos e fornecendo um contexto mais descritivo para cada grupo de testes. Isso facilita a leitura, manutenção e compreensão do código de teste.
 
 Além disso, as classes de teste aninhadas também têm acesso aos campos e métodos da classe de teste externa, permitindo o compartilhamento de recursos e configurações entre os testes relacionados dentro do mesmo contexto.
+
+No JUnit, as anotações `@Spy` e `@Mock` são usadas em conjunto com frameworks de simulação (mocking) para criar objetos simulados durante os testes. Ambas as anotações têm finalidades diferentes:
+
+1. `@Spy`: A anotação `@Spy` é usada para criar um objeto parcialmente simulado. Isso significa que o objeto é uma instância real da classe sendo testada, mas certos métodos ou comportamentos específicos podem ser substituídos por implementações simuladas. Os métodos não substituídos serão executados normalmente. O `@Spy` é útil quando você deseja manter parte do comportamento original do objeto e substituir apenas parte dele.
+
+2. `@Mock`: A anotação `@Mock` é usada para criar um objeto completamente simulado (mock). O objeto simulado é criado com base na interface ou classe sendo testada, e você pode especificar o comportamento simulado dos métodos durante os testes. O `@Mock` é útil quando você deseja controlar completamente o comportamento de um objeto simulado sem depender de sua implementação real.
+
+Em resumo, a diferença principal é que `@Spy` cria um objeto parcialmente simulado, mantendo parte do comportamento original, enquanto `@Mock` cria um objeto completamente simulado, permitindo controlar completamente seu comportamento durante os testes.
+
+Ambas as anotações são usadas em conjunto com frameworks de simulação, como o Mockito, por exemplo. Esses frameworks fornecem funcionalidades adicionais para configurar o comportamento dos objetos simulados, definir valores de retorno, verificar chamadas de métodos, entre outros recursos úteis para testes de unidade.
